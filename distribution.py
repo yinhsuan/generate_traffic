@@ -1,27 +1,26 @@
-import subprocess as sp
-import sys
 import numpy as np
+from scipy.stats import truncnorm
 
-def normal_distribution(mean, std, size):
-    return np.random.normal(loc = mean, scale = std, size = size)
+def normal_distribution(mean, std):
+    return np.random.normal(loc=mean, scale=std, size=None)
 
-def generate_traffic():
-    # Load
-    mean = 20
-    std = 0.1
-    size = 1
+def truncated_normal_distribution(a, b, mean, std):
+    return np.rint(truncnorm.rvs(a, b, loc=mean, scale=std, size=1))
 
-    load = normal_distribution(mean, std, size)
-    print("{load}".format(load=load))
+def log_normal_distribution(mean, std):
+    return np.random.lognormal(mean=mean, sigma=std, size=None)
 
-    # Flow Duration
+def exponential_distribution(scale):
+    return np.random.exponential(scale=scale, size=None)
 
-    # Racks Size
+def weibull_distribution(shape):
+    return np.random.weibull(a=shape, size=None)
 
-    # Server
+def pareto_distribution(shape):
+    return np.random.pareto(a=shape, size=None)
 
+def poisson_distribution(lam):
+    return np.random.poisson(lam=lam, size=None)
 
-
-
-if __name__ == "__main__":
-    generate_traffic()
+def uniform_distribution(low, high):
+    return np.random.uniform(low=low, high=high, size=None)
