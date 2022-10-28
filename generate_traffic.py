@@ -12,12 +12,15 @@ from distribution import pareto_distribution
 from distribution import poisson_distribution
 from distribution import uniform_distribution
 
+from traffic import *
 
-def generate_traffic(case, mean, std):
-    # mean = 20
-    # std = 0.1
-    # a = 15
-    # b = 25
+
+
+def generate_traffic(case, mean, std, traffic_file):
+    mean = 20
+    std = 0.1
+    a = 15
+    b = 25
     # scale = 2
     # shape = 1
     # lam = 1
@@ -38,10 +41,13 @@ def generate_traffic(case, mean, std):
     # STEP1: Traffic Generate Case
     # Fixed
     if case == "fixed":
-        print("fixed")
+        traffics = get_traffics_from_file(traffic_file)
     # Whole System
     elif case == "whole":
-        print("whole")
+        numberOfRack = int(truncated_normal_distribution(a, b, mean, std)) #要用哪種distribution之後再決定
+        # print("{numberOfRack}".format(numberOfRack=numberOfRack))
+        # print("{traffic_file}".format(traffic_file=traffic_file))
+
     # Locality System
     else:
         print("local")
@@ -66,8 +72,9 @@ def generate_traffic(case, mean, std):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--case', type=str)
+    parser.add_argument('--traffic_file', type=str)
     parser.add_argument('--mean', type=str)
     parser.add_argument('--std', type=str)
     args = parser.parse_args()
 
-    generate_traffic(args.case, args.mean, args.std)
+    generate_traffic(args.case, args.mean, args.std, args.traffic_file)
