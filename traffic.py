@@ -21,7 +21,7 @@ class Traffic:
 
 def print_traffics(traffics):
     for traffic in traffics:
-        print("{src_server_name}, {dst_server_name}, {src_server_ip}, {dst_server_ip}, {data_rate},{port}".format(
+        print("{src_server_name}, {dst_server_name}, {src_server_ip}, {dst_server_ip}, {data_rate}, {port}".format(
                                                                         src_server_name=traffic.src_server_name,
                                                                         dst_server_name=traffic.dst_server_name, 
                                                                         src_server_ip=traffic.src_server_ip, 
