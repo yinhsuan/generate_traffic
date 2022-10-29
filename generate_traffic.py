@@ -45,10 +45,12 @@ def create_traffic(src_server_ip, dst_server_ip, port, protocol, load, duration,
 def get_load(mean, std):
     low_bound = 0
     high_bound = 10
-    return int(truncated_normal_distribution(low_bound, high_bound, mean, std))
+    a, b = (low_bound - mean) / std, (high_bound - mean) / std
+    return int(truncated_normal_distribution(a, b, mean, std))
 
-def get_duration(mean, std):
-    return int(normal_distribution(mean, std))
+def get_duration(scale):
+    # return int(normal_distribution(mean, std))
+    return int(exponential_distribution(scale) * 10)
 
 def rack_to_server_ip(rack, server_num):
     if 1 <= rack and rack <= 5:
@@ -64,11 +66,16 @@ def rack_to_server_ip(rack, server_num):
         print("Wrong Rack# !!!!")
     return "10.{pod}.{rack}.{server}".format(pod=pod_num, rack=rack_num, server=server_num)
 
-def get_traffics(src_rack_num, dst_rack_num, src_racks, dst_racks, mean, std, protocol, iperf_version):
+def get_traffics(src_rack_num, dst_rack_num, src_racks, dst_racks, mean, std, protocol, iperf_version, scale):
     # STEP4: How many servers 
     server_num_list = np.arange(MIN_SERVER_NUM, MAX_SERVER_NUM+1) # (1 ~ 16)
     src_servers_per_rack_num = np.random.choice(server_num_list, size=src_rack_num)
     dst_servers_per_rack_num = np.random.choice(server_num_list, size=dst_rack_num)
+    # low_bound = MIN_SERVER_NUM
+    # high_bound = MAX_SERVER_NUM
+    # a, b = (low_bound - mean) / std, (high_bound - mean) / std
+    # src_servers_per_rack_num = int(truncated_normal_distribution(a, b, mean, std))
+    # dst_servers_per_rack_num = int(truncated_normal_distribution(a, b, mean, std))
     
     # STEP5: Which servers
     src_servers_per_rack = list()
@@ -88,7 +95,8 @@ def get_traffics(src_rack_num, dst_rack_num, src_racks, dst_racks, mean, std, pr
                 for dst_server in dst_servers_per_rack[dst_index]:
                     # STEP7: Determine flow load & duration
                     load = get_load(mean, std)
-                    duration = get_duration(mean, std)
+                    # duration = get_duration(mean, std)
+                    duration = get_duration(scale)
 
                     src_server_ip = rack_to_server_ip(src_rack, src_server)
                     dst_server_ip = rack_to_server_ip(dst_rack, dst_server)
@@ -106,7 +114,7 @@ def start_traffics(traffics):
         print(cmd)
 
 
-def generate_traffic(case, mean, std, traffic_file=None, protocol="u", iperf_version="iperf2"):
+def generate_traffic(case, mean, std, traffic_file=None, protocol="u", iperf_version="iperf2", scale=1):
     # STEP1: Traffic Generate Case
     if case == "fixed":
         traffics = get_traffics_from_file(traffic_file)
@@ -125,6 +133,11 @@ def generate_traffic(case, mean, std, traffic_file=None, protocol="u", iperf_ver
         # STEP2: How many racks (1 ~ 15)
         src_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
         dst_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
+        # low_bound = MIN_RACK_NUM
+        # high_bound = MAX_RACK_NUM
+        # a, b = (low_bound - mean) / std, (high_bound - mean) / std
+        # src_rack_num = int(truncated_normal_distribution(a, b, mean, std))
+        # dst_rack_num = int(truncated_normal_distribution(a, b, mean, std))
 
         # STEP3: Which racks
         rack_list = np.arange(MIN_RACK_NUM, MAX_RACK_NUM+1) # (1 ~ 15)
@@ -132,7 +145,7 @@ def generate_traffic(case, mean, std, traffic_file=None, protocol="u", iperf_ver
         dst_racks = np.random.choice(rack_list, size=dst_rack_num, replace=False)
 
         # GET TRAFFICS
-        traffics = get_traffics(src_rack_num, dst_rack_num, src_racks, dst_racks, mean, std, protocol, iperf_version)
+        traffics = get_traffics(src_rack_num, dst_rack_num, src_racks, dst_racks, mean, std, protocol, iperf_version, scale)
     else:
         print("Wrong Case Input!!!!")
 
@@ -147,6 +160,7 @@ if __name__ == "__main__":
     parser.add_argument('--traffic_file', type=str)
     parser.add_argument('--mean', type=int)
     parser.add_argument('--std', type=float)
+    parser.add_argument('--scale', type=int)
     args = parser.parse_args()
 
-    generate_traffic(args.case, args.mean, args.std, args.traffic_file)
+    generate_traffic(args.case, args.mean, args.std, args.traffic_file, args.scale)
