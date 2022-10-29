@@ -24,3 +24,23 @@ def poisson_distribution(lam):
 
 def uniform_distribution(low, high):
     return np.random.uniform(low=low, high=high, size=None)
+
+# mean = 20
+# std = 0.1
+# a = 1
+# b = 15
+# scale = 2
+# shape = 1
+# lam = 1
+# low = 10
+# high = 50
+
+# load = int(normal_distribution(mean, std))
+# load = int(truncated_normal_distribution(a, b, mean, std))
+# load = int(exponential_distribution(scale))
+# load = int(log_normal_distribution(mean, std))
+# load = int(weibull_distribution(shape))
+# load = int(pareto_distribution(shape))
+# load = int(poisson_distribution(lam))
+# load = int(uniform_distribution(low, high))
+# print("{load}".format(load=load))

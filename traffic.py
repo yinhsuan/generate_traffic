@@ -19,23 +19,13 @@ class Traffic:
         server_name = "s0" + str(parsed_ip[1]) + "0" + str(parsed_ip[2]) + str(parsed_ip[3])
         return server_name
 
-def get_traffics_from_file(traffic_file):
-    traffics = list()
+def print_traffics(traffics):
+    for traffic in traffics:
+        print("{src_server_name}, {dst_server_name}, {src_server_ip}, {dst_server_ip}, {data_rate},{port}".format(
+                                                                        src_server_name=traffic.src_server_name,
+                                                                        dst_server_name=traffic.dst_server_name, 
+                                                                        src_server_ip=traffic.src_server_ip, 
+                                                                        dst_server_ip=traffic.dst_server_ip, 
+                                                                        data_rate=traffic.data_rate, 
+                                                                        port=traffic.port))
 
-    fileLine = open(traffic_file,'r').read().splitlines()
-    while("" in fileLine):
-        fileLine.remove("")
-
-    for line in fileLine:
-        parsed_argv = line.split(" ")
-        traffics.append(Traffic(parsed_argv[0], parsed_argv[1], parsed_argv[2], 
-                                parsed_argv[3], parsed_argv[4], parsed_argv[5], parsed_argv[6]))
-
-        # print("{src_server_name} {dst_server_ip} {port} {protocol} {data_rate} {duration} {iperf_version}".format(src_server_name=parsed_argv[0], 
-        #                                                                                                             dst_server_ip=parsed_argv[1], 
-        #                                                                                                             port=parsed_argv[2], 
-        #                                                                                                             protocol=parsed_argv[3],
-        #                                                                                                             data_rate=parsed_argv[4],
-        #                                                                                                             duration=parsed_argv[5],
-        #                                                                                                             iperf_version=parsed_argv[6]))
-    return traffics
