@@ -114,7 +114,7 @@ def start_traffics(traffics):
         print(cmd)
 
 
-def generate_traffic(case, mean, std, traffic_file=None, protocol="u", iperf_version="iperf2", scale=1):
+def generate_traffic(case, mean, std, traffic_file=None, protocol="u", iperf_version="iperf2", scale=1, dst_rack_mean=0, dst_rack_std=0):
     # STEP1: Traffic Generate Case
     if case == "fixed":
         traffics = get_traffics_from_file(traffic_file)
@@ -131,13 +131,15 @@ def generate_traffic(case, mean, std, traffic_file=None, protocol="u", iperf_ver
         traffics = get_traffics(src_rack_num, dst_rack_num, src_racks, dst_racks, mean, std, protocol, iperf_version)
     elif case == "locality":
         # STEP2: How many racks (1 ~ 15)
-        src_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
-        dst_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
-        # low_bound = MIN_RACK_NUM
-        # high_bound = MAX_RACK_NUM
-        # a, b = (low_bound - mean) / std, (high_bound - mean) / std
-        # src_rack_num = int(truncated_normal_distribution(a, b, mean, std))
-        # dst_rack_num = int(truncated_normal_distribution(a, b, mean, std))
+        if dst_rack_mean > 0: # calculate LC
+            low_bound = MIN_RACK_NUM
+            high_bound = MAX_RACK_NUM
+            a, b = (low_bound - mean) / std, (high_bound - mean) / std
+            src_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
+            dst_rack_num = int(truncated_normal_distribution(a, b, dst_rack_mean, dst_rack_std))
+        else:
+            src_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
+            dst_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
 
         # STEP3: Which racks
         rack_list = np.arange(MIN_RACK_NUM, MAX_RACK_NUM+1) # (1 ~ 15)
@@ -161,6 +163,8 @@ if __name__ == "__main__":
     parser.add_argument('--mean', type=int)
     parser.add_argument('--std', type=float)
     parser.add_argument('--scale', type=int)
+    parser.add_argument('--dst_rack_mean', type=int)
+    parser.add_argument('--dst_rack_std', type=float)
     args = parser.parse_args()
 
-    generate_traffic(args.case, args.mean, args.std, args.traffic_file, args.scale)
+    generate_traffic(args.case, args.mean, args.std, args.traffic_file, args.scale, args.dst_rack_mean, args.dst_rack_std)
