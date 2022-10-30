@@ -2,6 +2,7 @@ import subprocess as sp
 import numpy as np
 from scipy.stats import truncnorm
 import argparse
+import math
 
 from distribution import normal_distribution
 from distribution import truncated_normal_distribution
@@ -50,7 +51,7 @@ def get_load(mean, std):
 
 def get_duration(scale):
     # return int(normal_distribution(mean, std))
-    return int(exponential_distribution(scale) * 10)
+    return int(exponential_distribution(scale) * 0.5 * math.exp(5))
 
 def rack_to_server_ip(rack, server_num):
     if 1 <= rack and rack <= 5:
@@ -94,7 +95,7 @@ def get_traffics(src_rack_num, dst_rack_num, src_racks, dst_racks, mean, std, pr
             for src_server in src_servers_per_rack[src_index]:
                 for dst_server in dst_servers_per_rack[dst_index]:
                     # STEP7: Determine flow load & duration
-                    load = get_load(mean, std)
+                    load = str(get_load(mean, std)) + "M"
                     # duration = get_duration(mean, std)
                     duration = get_duration(scale)
 
@@ -109,12 +110,15 @@ def get_traffics(src_rack_num, dst_rack_num, src_racks, dst_racks, mean, std, pr
 
 def start_traffics(traffics):
     for traffic in traffics:
-        cmd = "salt \"" + str(traffic.src_server_name) + "\" cmd.run \"ping " + str(traffic.dst_server_ip) + " -c " + str(traffic.duration) + " > " + str(traffic.src_server_name) + "_to_" + str(traffic.dst_server_name) + ".txt\" &"
-        # process = sp.Popen(cmd, shell=True)
+        # cmd = "salt \"" + str(traffic.src_server_name) + "\" cmd.run \"ping " + str(traffic.dst_server_ip) + " -c " + str(traffic.duration) + " > " + str(traffic.src_server_name) + "_to_" + str(traffic.dst_server_name) + ".txt\" &"
+        cmd = "salt \"" + str(traffic.src_server_name) + "\" cmd.run \"" + str(traffic.iperf_version) + " -u -c " + str(traffic.dst_server_ip) + " -b " + str(traffic.data_rate) + " -P " + str(traffic.thread_num) + " -t " + str(traffic.duration) + " -i 1 -p " + str(traffic.port) + "\" &" 
+        # cmd = r'salt --async "{minionName}" cmd.run "{traffic.iperf_version} -c {traffic.dst_server_ip} -p {traffic.port} {optionCMD} &"'
+        # process = sp.Popen("echo "+cmd+">>test.txt", shell=True)
+
         print(cmd)
 
 
-def generate_traffic(case, mean, std, traffic_file=None, protocol="u", iperf_version="iperf2", scale=1, dst_rack_mean=0, dst_rack_std=0):
+def generate_traffic(case, mean, std, traffic_file=None, scale=1, dst_rack_mean=0, dst_rack_std=0, protocol="u", iperf_version="iperf2"):
     # STEP1: Traffic Generate Case
     if case == "fixed":
         traffics = get_traffics_from_file(traffic_file)
@@ -128,7 +132,7 @@ def generate_traffic(case, mean, std, traffic_file=None, protocol="u", iperf_ver
         dst_racks = np.arange(MIN_RACK_NUM, MAX_RACK_NUM+1)
 
         # GET TRAFFICS
-        traffics = get_traffics(src_rack_num, dst_rack_num, src_racks, dst_racks, mean, std, protocol, iperf_version)
+        traffics = get_traffics(src_rack_num, dst_rack_num, src_racks, dst_racks, mean, std, protocol, iperf_version, scale)
     elif case == "locality":
         # STEP2: How many racks (1 ~ 15)
         if dst_rack_mean > 0: # calculate LC
@@ -153,8 +157,6 @@ def generate_traffic(case, mean, std, traffic_file=None, protocol="u", iperf_ver
 
     # STEP8: Start the traffic
     start_traffics(traffics)
-
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

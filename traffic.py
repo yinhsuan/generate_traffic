@@ -1,7 +1,7 @@
 import sys
 
 class Traffic:
-    def __init__(self, src_server_ip, dst_server_ip, port, protocol, data_rate, duration, iperf_version, pid=None):
+    def __init__(self, src_server_ip, dst_server_ip, port, protocol, data_rate, duration, iperf_version, pid=None, thread_num=1):
         self.src_server_name = self.ip_to_server_name(src_server_ip)
         self.dst_server_name = self.ip_to_server_name(dst_server_ip)
         self.src_server_ip = src_server_ip
@@ -13,6 +13,7 @@ class Traffic:
         self.protocol = protocol
         self.duration = duration
         self.iperf_version = iperf_version
+        self.thread_num = thread_num
 
     def ip_to_server_name(self, ip):
         parsed_ip = ip.split(".")
