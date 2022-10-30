@@ -114,7 +114,9 @@ def start_traffics(traffics):
         cmd = "salt \"" + str(traffic.src_server_name) + "\" cmd.run \"" + str(traffic.iperf_version) + " -u -c " + str(traffic.dst_server_ip) + " -b " + str(traffic.data_rate) + " -P " + str(traffic.thread_num) + " -t " + str(traffic.duration) + " -i 1 -p " + str(traffic.port) + "\" &" 
         # cmd = r'salt --async "{minionName}" cmd.run "{traffic.iperf_version} -c {traffic.dst_server_ip} -p {traffic.port} {optionCMD} &"'
         # process = sp.Popen("echo "+cmd+">>test.txt", shell=True)
-
+        text_file = open("traffic_log.txt", "a")
+        text_file.write("{}\n".format(cmd))
+        text_file.close()
         print(cmd)
 
 
