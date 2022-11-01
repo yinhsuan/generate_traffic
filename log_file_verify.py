@@ -13,13 +13,22 @@ def parse_cmd():
     with open('traffic_log.txt') as infile:
         cmds = infile.readlines()
 
+    src_server_ip = list()
+    dst_server_ip = list()
     for cmd in cmds:
         # print(cmd)
         stats = re.findall(r'\d+', cmd)
+        src_server_ip.append(stats[0])
         flow_load.append(float((stats[6] + "." + stats[7])))
         flow_duration.append(float(stats[9]))
         dst_rack.append(stats[3] + "." + stats[4])
+        dst_server_ip.append(stats[3] + "." + stats[4] + "." + stats[5])
         dst_server.append(int(stats[5]))
+
+    # for dst_rack normalization
+    src_server_num = len([*set(src_server_ip)])
+    dst_server_num = len([*set(dst_server_ip)])
+    return src_server_num, dst_server_num
 
 
 def generate_std_flow_load(mean, std):
@@ -38,7 +47,6 @@ def generate_std_rack():
     rack_list = ['1.1', '1.2', '1.3', '1.4', '1.5', '2.1', '2.2', '2.3', '2.4', '2.5',
                 '3.1', '3.2', '3.3', '3.4', '3.5']
     std_rack = np.random.choice(rack_list, size=len(dst_rack))
-    print(std_rack)
     return std_rack
 
 def generate_std_server():
@@ -74,31 +82,33 @@ def plot_load(std_load):
     plt.ylabel('Number of Flows')
     plt.show()
 
-def calculate_duplicates(racks):
+def calculate_duplicates(racks, src_server_num, dst_server_num):
+    print(src_server_num)
+    print(dst_server_num)
     keys = ('1.1', '1.2', '1.3', '1.4', '1.5', '2.1', '2.2', '2.3', '2.4', '2.5', '3.1', '3.2', '3.3', '3.4', '3.5')
     value = 0
     rack_count = dict.fromkeys(keys, value)
     for rack_id in racks:
-        rack_count[rack_id] += 1
+        rack_count[rack_id] += (1.0 / (src_server_num * dst_server_num)) # normalization
     return rack_count
 
-def plot_dst_rack(std_rack):
+def plot_dst_rack(std_rack, src_server_num, dst_server_num):
     dst_rack_bins = [1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5]
-    dst_rack_count = calculate_duplicates(dst_rack)
-    std_dst_rack_count = calculate_duplicates(std_rack)
+    dst_rack_count = calculate_duplicates(dst_rack, src_server_num, dst_server_num)
+    std_dst_rack_count = calculate_duplicates(std_rack, src_server_num, dst_server_num)
     plt.plot(dst_rack_bins, list(std_dst_rack_count.values()), label='Uniform Distribution')
     plt.plot(dst_rack_bins, list(dst_rack_count.values()), label='Dst. Rack')
     plt.xticks([1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5])
     plt.legend(loc='upper right')
-    plt.xlabel('Dst. Pod_Rack ID')
-    plt.ylabel('Number of Chosen Rack ID')
+    plt.xlabel('Dst. Rack ID')
+    plt.ylabel('Relative Frequency of Chosen Rack ID')
     plt.show()
 
 def plot_dst_server(std_server):
     dst_server_bins = np.linspace(16, 32)
     plt.hist(std_server, dst_server_bins, histtype="step", label='Uniform Distribution')
     plt.hist(dst_server, dst_server_bins, histtype="step", label='Dst. Server')
-    axes = plt.gca()
+    # axes = plt.gca()
     # axes.set_ylim([0, 1000])
     plt.legend(loc='upper right')
     plt.xlabel('Dst. Server ID')
@@ -106,14 +116,14 @@ def plot_dst_server(std_server):
     plt.show()
 
 def start_analysis(mean, std, scale=1):
-    parse_cmd()
+    src_server_num, dst_server_num  = parse_cmd()
     std_duration = generate_std_flow_duration(scale)
     std_load = generate_std_flow_load(mean, std)
     std_rack = generate_std_rack()
     std_server = generate_std_server()
     plot_duration(std_duration)
     plot_load(std_load)
-    plot_dst_rack(std_rack)
+    plot_dst_rack(std_rack, src_server_num, dst_server_num)
     plot_dst_server(std_server)
     print_stats_result(std_duration, std_load)
 

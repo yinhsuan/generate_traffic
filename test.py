@@ -8,26 +8,18 @@ import re
 # for idx, digit in enumerate(stats):
 #     print(idx, digit)
 
-def cummulate_duplicates(l):
-    seen = {}
+# def cummulate_duplicates(l):
+#     seen = {}
 
-    for item in l:
-        if item not in seen:
-            seen[item] = 1
-        else:
-            seen[item] += 1
-    return seen
+#     for item in l:
+#         if item not in seen:
+#             seen[item] = 1
+#         else:
+#             seen[item] += 1
+#     return seen
 
-pod_rack = [5.4, 1.2, 1.3, 1.3, 1.3, 2.4, 3.5, 2.4]
-cummulate = dict(sorted(cummulate_duplicates(pod_rack).items()))
-# cummulate = dict((cummulate_duplicates(pod_rack).items()))
-print(list(cummulate.values()))
+src_rack = [5.4, 1.2, 1.3, 1.3, 1.3, 2.4, 3.5, 2.4]
+res = [*set(src_rack)]
+print(res)
+print(len(res))
 
-print(type(cummulate.values()))
-
-x = ('key1', 'key2', 'key3')
-y = 0
-
-thisdict = dict.fromkeys(x, y)
-
-print(thisdict)
