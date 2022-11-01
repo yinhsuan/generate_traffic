@@ -45,13 +45,13 @@ def create_traffic(src_server_ip, dst_server_ip, port, protocol, load, duration,
     
 def get_load(mean, std):
     low_bound = 0
-    high_bound = 10
+    high_bound = 0.1
     a, b = (low_bound - mean) / std, (high_bound - mean) / std
     return format(truncated_normal_distribution(a, b, mean, std)[0], '.2f')
 
 def get_duration(scale):
     # return int(normal_distribution(mean, std))
-    return int(exponential_distribution(scale) * 0.5 * math.exp(5))
+    return int(exponential_distribution(scale))
 
 def rack_to_server_ip(rack, server_num):
     if 1 <= rack and rack <= 5:
