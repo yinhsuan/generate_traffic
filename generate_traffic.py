@@ -47,7 +47,7 @@ def get_load(mean, std):
     low_bound = 0
     high_bound = 10
     a, b = (low_bound - mean) / std, (high_bound - mean) / std
-    return int(truncated_normal_distribution(a, b, mean, std))
+    return format(truncated_normal_distribution(a, b, mean, std)[0], '.2f')
 
 def get_duration(scale):
     # return int(normal_distribution(mean, std))
@@ -119,7 +119,7 @@ def start_traffics(traffics):
         print(cmd)
 
 
-def generate_traffic(case, mean, std, traffic_file=None, scale=1, dst_rack_mean=0, dst_rack_std=0, protocol="u", iperf_version="iperf2"):
+def generate_traffic(case, mean, std, traffic_file=None, scale=1, dst_rack_mean=0, dst_rack_std=0, protocol="u", iperf_version="iperf"):
     # STEP1: Traffic Generate Case
     if case == "fixed":
         traffics = get_traffics_from_file(traffic_file)

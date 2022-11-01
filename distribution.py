@@ -5,7 +5,7 @@ def normal_distribution(mean, std):
     return np.random.normal(loc=mean, scale=std, size=None)
 
 def truncated_normal_distribution(a, b, mean, std):
-    return np.rint(truncnorm.rvs(a, b, loc=mean, scale=std, size=1))
+    return truncnorm.rvs(a, b, loc=mean, scale=std, size=1)
 
 def log_normal_distribution(mean, std):
     return np.random.lognormal(mean=mean, sigma=std, size=None)
