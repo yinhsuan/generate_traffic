@@ -123,6 +123,9 @@ def start_traffics(traffics):
 
 
 def generate_traffic(case, mean, std, traffic_file=None, scale=1, dst_rack_mean=0, dst_rack_std=0, protocol="u", iperf_version="iperf"):
+    print(dst_rack_mean)
+    print(dst_rack_std)
+    print(scale)
     # STEP1: Traffic Generate Case
     if case == "fixed":
         traffics = get_traffics_from_file(traffic_file)
@@ -168,8 +171,8 @@ if __name__ == "__main__":
     parser.add_argument('--traffic_file', type=str)
     parser.add_argument('--mean', type=float)
     parser.add_argument('--std', type=float)
-    parser.add_argument('--scale', type=int)
-    parser.add_argument('--dst_rack_mean', type=int)
+    parser.add_argument('--scale', type=float)
+    parser.add_argument('--dst_rack_mean', type=float)
     parser.add_argument('--dst_rack_std', type=float)
     args = parser.parse_args()
 

@@ -17,13 +17,20 @@ def parse_cmd():
     dst_server_ip = list()
     for cmd in cmds:
         # print(cmd)
-        stats = re.findall(r'\d+', cmd)
-        src_server_ip.append(stats[0])
-        flow_load.append(float((stats[6] + "." + stats[7])))
-        flow_duration.append(float(stats[9]))
-        dst_rack.append(stats[3] + "." + stats[4])
-        dst_server_ip.append(stats[3] + "." + stats[4] + "." + stats[5])
-        dst_server.append(int(stats[5]))
+        cmd = cmd.split(' ')
+
+        # stats = re.findall(r'\d+', cmd)
+        print("src_server_ip: " + cmd[1])
+        print("flow_duration: " + cmd[12])
+        print("flow_load: " + ((re.findall(r'\d+', cmd[8])[0]) + "."  + (re.findall(r'\d+', cmd[8])[1])))
+        print("dst_rack: " + (cmd[6].split('.'))[1] + "."  + (cmd[6].split('.'))[2])
+        print("")
+        src_server_ip.append(cmd[1])
+        flow_duration.append(float(cmd[12]))
+        flow_load.append(float((re.findall(r'\d+', cmd[8])[0]) + "." + (re.findall(r'\d+', cmd[8])[1])))
+        dst_server_ip.append(cmd[6])
+        dst_rack.append((cmd[6].split('.'))[1] + "."  + (cmd[6].split('.'))[2])
+        # dst_server.append(int((cmd[6].split('.'))[3]))
 
     with open('locality_distribution.txt', 'a') as outfile:
         outfile.write(str(len([*set(dst_rack)])) + "\n")
@@ -31,12 +38,13 @@ def parse_cmd():
     # for dst_rack normalization
     src_server_num = len([*set(src_server_ip)])
     dst_server_num = len([*set(dst_server_ip)])
+
     return src_server_num, dst_server_num
 
 
 def generate_std_flow_load(mean, std):
     low_bound = 0
-    high_bound = 10
+    high_bound = 0.1
     a, b = (low_bound - mean) / std, (high_bound - mean) / std
     std_load = [round(i, 2) for i in truncnorm.rvs(a, b, loc=mean, scale=std, size=len(flow_load))]
     return std_load
@@ -77,7 +85,7 @@ def plot_duration(std_duration):
     plt.show()
 
 def plot_load(std_load):
-    load_bins = np.linspace(0, 14, 200)
+    load_bins = np.linspace(0, 0.1, 200)
     plt.hist(std_load, load_bins, histtype="step", label='Truncated-normal Distribution')  # alpha: transparency
     plt.hist(flow_load, load_bins, histtype="step", label='Flow Load')
     plt.legend(loc='upper right')
@@ -92,7 +100,8 @@ def calculate_duplicates(racks, src_server_num, dst_server_num):
     value = 0
     rack_count = dict.fromkeys(keys, value)
     for rack_id in racks:
-        rack_count[rack_id] += (1.0 / (src_server_num * dst_server_num)) # normalization
+        # rack_count[rack_id] += (1.0 / (src_server_num * dst_server_num)) # normalization
+        rack_count[rack_id] += 1
     return rack_count
 
 def plot_dst_rack(std_rack, src_server_num, dst_server_num):
@@ -100,8 +109,8 @@ def plot_dst_rack(std_rack, src_server_num, dst_server_num):
     x = np.arange(len(dst_rack_bins))
     dst_rack_count = calculate_duplicates(dst_rack, src_server_num, dst_server_num)
     std_dst_rack_count = calculate_duplicates(std_rack, src_server_num, dst_server_num)
-    plt.bar(dst_rack_bins, list(std_dst_rack_count.values()), label='Uniform Distribution', tick_label=dst_rack_bins, fill=False, edgecolor='blue')
-    plt.bar(dst_rack_bins, list(dst_rack_count.values()), label='Dst. Rack', tick_label=dst_rack_bins, fill=False, edgecolor='orange')
+    plt.bar(x, list(std_dst_rack_count.values()), label='Uniform Distribution', tick_label=dst_rack_bins, fill=False, edgecolor='blue')
+    plt.bar(x, list(dst_rack_count.values()), label='Dst. Rack', tick_label=dst_rack_bins, fill=False, edgecolor='orange')
     # plt.xticks([1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5])
     plt.legend(loc='upper right')
     plt.xlabel('Dst. Rack ID')
@@ -127,13 +136,13 @@ def start_analysis(mean, std, scale=1):
     std_server = generate_std_server()
     plot_duration(std_duration)
     plot_load(std_load)
-    plot_dst_rack(std_rack, src_server_num, dst_server_num)
-    plot_dst_server(std_server)
+    # plot_dst_rack(std_rack, src_server_num, dst_server_num)
+    # plot_dst_server(std_server)
     print_stats_result(std_duration, std_load)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mean', type=int)
+    parser.add_argument('--mean', type=float)
     parser.add_argument('--std', type=float)
     parser.add_argument('--scale', type=int)
     args = parser.parse_args()
