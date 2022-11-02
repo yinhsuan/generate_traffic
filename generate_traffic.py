@@ -119,13 +119,13 @@ def start_traffics(traffics):
         text_file = open("traffic_log.txt", "a")
         text_file.write("{}\n".format(cmd))
         text_file.close()
-        print(cmd)
+        # print(cmd)
 
 
 def generate_traffic(case, mean, std, traffic_file=None, scale=1, dst_rack_mean=0, dst_rack_std=0, protocol="u", iperf_version="iperf"):
-    print(dst_rack_mean)
-    print(dst_rack_std)
-    print(scale)
+    # print(dst_rack_mean)
+    # print(dst_rack_std)
+    # print(scale)
     # STEP1: Traffic Generate Case
     if case == "fixed":
         traffics = get_traffics_from_file(traffic_file)
