@@ -142,7 +142,7 @@ def generate_traffic(case, mean, std, traffic_file=None, scale=1, dst_rack_mean=
         if dst_rack_mean > 0: # calculate LC
             low_bound = MIN_RACK_NUM
             high_bound = MAX_RACK_NUM
-            a, b = (low_bound - mean) / std, (high_bound - mean) / std
+            a, b = (low_bound - dst_rack_mean) / dst_rack_std, (high_bound - dst_rack_mean) / dst_rack_std
             src_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
             dst_rack_num = int(truncated_normal_distribution(a, b, dst_rack_mean, dst_rack_std))
         else:
@@ -166,7 +166,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--case', type=str)
     parser.add_argument('--traffic_file', type=str)
-    parser.add_argument('--mean', type=int)
+    parser.add_argument('--mean', type=float)
     parser.add_argument('--std', type=float)
     parser.add_argument('--scale', type=int)
     parser.add_argument('--dst_rack_mean', type=int)
