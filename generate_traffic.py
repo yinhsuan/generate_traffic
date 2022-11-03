@@ -25,6 +25,17 @@ from params import MIN_SERVER_NUM
 from params import MAX_SERVER_NUM
 from params import START_PORT
 
+from params import CASE
+from params import TRAFFIC_FILE
+from params import FLOW_MEAN
+from params import FLOW_STD
+from params import SCALE
+from params import DST_RACK_MEAN
+from params import DST_RACK_STD
+from params import PROTOCOL
+from params import IPERF_VERSION
+
+
 # Fixed
 def get_traffics_from_file(traffic_file):
     traffics = list()
@@ -122,7 +133,7 @@ def start_traffics(traffics):
         # print(cmd)
 
 
-def generate_traffic(case, mean, std, traffic_file=None, scale=1, dst_rack_mean=0, dst_rack_std=0, protocol="u", iperf_version="iperf"):
+def generate_traffic(case, mean, std, traffic_file, scale, dst_rack_mean, dst_rack_std, protocol, iperf_version):
     # print(dst_rack_mean)
     # print(dst_rack_std)
     # print(scale)
@@ -166,14 +177,15 @@ def generate_traffic(case, mean, std, traffic_file=None, scale=1, dst_rack_mean=
     start_traffics(traffics)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--case', type=str)
-    parser.add_argument('--traffic_file', type=str)
-    parser.add_argument('--mean', type=float)
-    parser.add_argument('--std', type=float)
-    parser.add_argument('--scale', type=float)
-    parser.add_argument('--dst_rack_mean', type=float)
-    parser.add_argument('--dst_rack_std', type=float)
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('--case', type=str)
+    # parser.add_argument('--traffic_file', type=str)
+    # parser.add_argument('--mean', type=float)
+    # parser.add_argument('--std', type=float)
+    # parser.add_argument('--scale', type=float)
+    # parser.add_argument('--dst_rack_mean', type=float)
+    # parser.add_argument('--dst_rack_std', type=float)
+    # args = parser.parse_args()
 
-    generate_traffic(args.case, args.mean, args.std, args.traffic_file, args.scale, args.dst_rack_mean, args.dst_rack_std)
+    # generate_traffic(args.case, args.mean, args.std, args.traffic_file, args.scale, args.dst_rack_mean, args.dst_rack_std)
+    generate_traffic(CASE, FLOW_MEAN, FLOW_STD, TRAFFIC_FILE, SCALE, DST_RACK_MEAN, DST_RACK_STD, PROTOCOL, IPERF_VERSION)
