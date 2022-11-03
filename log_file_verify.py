@@ -81,7 +81,7 @@ def plot_duration(std_duration):
     duration_bins = np.linspace(0, 1000, 100)
     plt.hist(std_duration, duration_bins, histtype="step", label='Expected Flow Duration Distribution')  # alpha: transparency
     plt.hist(flow_duration, duration_bins, histtype="step", label='Generated Flow Duration Distribution')
-    plt.legend(loc='upper right')
+    plt.legend(loc='upper right', prop={'size': 7})
     plt.xlabel('Flow Duration (s)')
     plt.ylabel('Number of Flows')
     plt.show()
@@ -90,7 +90,7 @@ def plot_load(std_load):
     load_bins = np.linspace(0, 0.1, 33)
     plt.hist(std_load, load_bins, histtype="step", label='Expected Flow Size Distribution')  # alpha: transparency
     plt.hist(flow_load, load_bins, histtype="step", label='Generated Flow Size Distribution')
-    plt.legend(loc='upper right')
+    plt.legend(loc='upper right', prop={'size': 7})
     plt.xlabel('Flow Size (Mbits)')
     plt.ylabel('Number of Flows')
     plt.show()
