@@ -64,8 +64,7 @@ def generate_std_flow_duration(scale):
     return std_duration
 
 def generate_std_rack():
-    rack_list = ['1.1', '1.2', '1.3', '1.4', '1.5', '2.1', '2.2', '2.3', '2.4', '2.5',
-                '3.1', '3.2', '3.3', '3.4', '3.5']
+    rack_list = ['1.1', '1.2', '1.3', '1.4', '1.5', '2.1', '2.2', '2.3', '2.4', '2.5', '3.1', '3.2', '3.3', '3.4', '3.5']
     std_rack = np.random.choice(rack_list, size=len(dst_rack))
     return std_rack
 
@@ -76,17 +75,17 @@ def generate_std_server():
 
 def plot_duration(std_duration):
     duration_bins = np.linspace(0, 1000, 100)
-    plt.hist(std_duration, duration_bins, histtype="step", label='Exponential Distribution')  # alpha: transparency
-    plt.hist(flow_duration, duration_bins, histtype="step", label='Flow Duration')
+    plt.hist(std_duration, duration_bins, histtype="step", label='Expected Flow Duration Distribution')  # alpha: transparency
+    plt.hist(flow_duration, duration_bins, histtype="step", label='Generated Flow Duration Distribution')
     plt.legend(loc='upper right')
     plt.xlabel('Flow Duration (s)')
     plt.ylabel('Number of Flows')
     plt.show()
 
 def plot_load(std_load):
-    load_bins = np.linspace(0, 0.1, 200)
-    plt.hist(std_load, load_bins, histtype="step", label='Truncated-normal Distribution')  # alpha: transparency
-    plt.hist(flow_load, load_bins, histtype="step", label='Flow Load')
+    load_bins = np.linspace(0, 0.1, 33)
+    plt.hist(std_load, load_bins, histtype="step", label='Expected Flow Size Distribution')  # alpha: transparency
+    plt.hist(flow_load, load_bins, histtype="step", label='Generated Flow Size Distribution')
     plt.legend(loc='upper right')
     plt.xlabel('Flow Size (Mbits)')
     plt.ylabel('Number of Flows')
