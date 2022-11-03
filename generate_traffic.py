@@ -3,6 +3,7 @@ import numpy as np
 from scipy.stats import truncnorm
 import argparse
 import math
+import subprocess as sp
 
 from distribution import normal_distribution
 from distribution import truncated_normal_distribution

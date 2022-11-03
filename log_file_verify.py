@@ -4,6 +4,10 @@ from scipy.stats import truncnorm
 import re
 import argparse
 
+from params import FLOW_MEAN
+from params import FLOW_STD
+from params import SCALE
+
 flow_duration = list()
 flow_load = list()
 src_rack = list()
@@ -141,17 +145,17 @@ def start_analysis(mean, std, scale=1):
     std_load = generate_std_flow_load(mean, std)
     std_rack = generate_std_rack()
     std_server = generate_std_server()
+    # TO BE COMMENT
     plot_duration(std_duration)
     plot_load(std_load)
-    # plot_dst_rack(std_rack, src_server_num, dst_server_num)
-    # plot_dst_server(std_server)
     print_stats_result(std_duration, std_load)
+    # TO BE COMMENT
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--mean', type=float)
-    parser.add_argument('--std', type=float)
-    parser.add_argument('--scale', type=int)
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('--mean', type=float)
+    # parser.add_argument('--std', type=float)
+    # parser.add_argument('--scale', type=int)
+    # args = parser.parse_args()
 
-    start_analysis(args.mean, args.std, args.scale)
+    start_analysis(FLOW_MEAN, FLOW_STD, SCALE)
