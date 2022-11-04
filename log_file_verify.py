@@ -68,8 +68,7 @@ def generate_std_flow_duration(scale):
     return std_duration
 
 def generate_std_rack():
-    rack_list = ['1.1', '1.2', '1.3', '1.4', '1.5', '2.1', '2.2', '2.3', '2.4', '2.5',
-                '3.1', '3.2', '3.3', '3.4', '3.5']
+    rack_list = ['1.1', '1.2', '1.3', '1.4', '1.5', '2.1', '2.2', '2.3', '2.4', '2.5', '3.1', '3.2', '3.3', '3.4', '3.5']
     std_rack = np.random.choice(rack_list, size=len(dst_rack))
     return std_rack
 
@@ -80,6 +79,7 @@ def generate_std_server():
 
 def plot_duration(std_duration):
     duration_bins = np.linspace(0, 1000, 100)
+
     fig, ax = plt.subplots()
     ax.hist(std_duration, duration_bins, histtype="step", label='Exponential Distribution')  # alpha: transparency
     ax.hist(flow_duration, duration_bins, histtype="step", label='Flow Duration')
@@ -97,6 +97,7 @@ def plot_load(std_load):
     ax.set_xlabel('Flow Size (Mbit/s)')
     ax.set_ylabel('Number of Flows')
     fig.show()
+
 
 def calculate_duplicates(racks, src_server_num, dst_server_num):
     keys = ('1.1', '1.2', '1.3', '1.4', '1.5', '2.1', '2.2', '2.3', '2.4', '2.5', '3.1', '3.2', '3.3', '3.4', '3.5')
