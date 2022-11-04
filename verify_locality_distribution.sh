@@ -2,6 +2,8 @@ read -p "Enter dst_rack_mean: " mean
 read -p "Enter dst_rack_std: " std
 read -p "Enter iteration_num: " it_num
 
+./clean_log_file.sh
+
 if [ "$mean" -gt 0 ]
 then
     echo "dst_rack_num distribution: Truncated-normal"

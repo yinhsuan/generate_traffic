@@ -161,6 +161,7 @@ def generate_traffic(case, mean, std, traffic_file, scale, dst_rack_mean, dst_ra
             src_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
             dst_rack_num = int(truncated_normal_distribution(a, b, dst_rack_mean, dst_rack_std))
         else:
+            print("hihihihihihihih")
             src_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
             dst_rack_num = int(uniform_distribution(MIN_RACK_NUM, MAX_RACK_NUM+1))
 

@@ -57,37 +57,45 @@ def parse_file(dst_rack_num_list, src_rack_num_list, dst_rack_count, src_rack_co
 
 def plot_dst_rack_num(dst_rack_num_list):
     dst_server_num_bins = np.linspace(1, 16)
-    plt.hist(dst_rack_num_list, dst_server_num_bins, histtype="step", label='Dst. Rack #')
-    plt.legend(loc='upper right')
-    plt.xlabel('Dst. Rack #')
-    plt.ylabel('Number of Chosen Dst. Rack #')
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.hist(dst_rack_num_list, dst_server_num_bins, histtype="step", label='Dst. Rack #')
+    ax.legend(loc='upper right')
+    ax.set_xlabel('Dst. Rack #')
+    ax.set_ylabel('Number of Chosen Dst. Rack #')
+    # fig.show()
+    fig.savefig('Number_Of_Dst_Rack.jpg')
 
 def plot_src_rack_num(src_rack_num_list):
     src_server_num_bins = np.linspace(1, 16)
-    plt.hist(src_rack_num_list, src_server_num_bins, histtype="step", label='Src. Rack #')
-    plt.legend(loc='upper right')
-    plt.xlabel('Src. Rack #')
-    plt.ylabel('Number of Chosen Src. Rack #')
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.hist(src_rack_num_list, src_server_num_bins, histtype="step", label='Src. Rack #')
+    ax.legend(loc='upper right')
+    ax.set_xlabel('Src. Rack #')
+    ax.set_ylabel('Number of Chosen Src. Rack #')
+    # fig.show()
+    fig.savefig('Number_Of_Src_Rack.jpg')
 
 def  plot_dst_rack_distribution(dst_rack_count):
     dst_rack_bins = ['1.1', '1.2', '1.3', '1.4', '1.5', '2.1', '2.2', '2.3', '2.4', '2.5', '3.1', '3.2', '3.3', '3.4', '3.5']
     x = np.arange(len(dst_rack_bins))
-    plt.bar(x, list(dst_rack_count.values()), label='Dst. Rack', tick_label=dst_rack_bins, fill=False)
-    plt.legend(loc='upper right')
-    plt.xlabel('Dst. Rack ID')
-    plt.ylabel('Number of Chosen Destination Rack')
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.bar(x, list(dst_rack_count.values()), label='Dst. Rack', tick_label=dst_rack_bins, fill=False)
+    ax.legend(loc='upper right')
+    ax.set_xlabel('Dst. Rack ID')
+    ax.set_ylabel('Number of Chosen Destination Rack')
+    # fig.show()
+    fig.savefig('Dst_Rack_Id.jpg')
 
 def  plot_src_rack_distribution(src_rack_count):
     src_rack_bins = ['1.1', '1.2', '1.3', '1.4', '1.5', '2.1', '2.2', '2.3', '2.4', '2.5', '3.1', '3.2', '3.3', '3.4', '3.5']
     x = np.arange(len(src_rack_bins))
-    plt.bar(x, list(src_rack_count.values()), label='Src. Rack', tick_label=src_rack_bins, fill=False)
-    plt.legend(loc='upper right')
-    plt.xlabel('Src. Rack ID')
-    plt.ylabel('Number of Chosen Source Rack')
-    plt.show() 
+    fig, ax = plt.subplots()
+    ax.bar(x, list(src_rack_count.values()), label='Src. Rack', tick_label=src_rack_bins, fill=False)
+    ax.legend(loc='upper right')
+    ax.set_xlabel('Src. Rack ID')
+    ax.set_ylabel('Number of Chosen Source Rack')
+    # fig.show()
+    fig.savefig('Src_Rack_Id.jpg')
 
 
 if __name__ == "__main__":

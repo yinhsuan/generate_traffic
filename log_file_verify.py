@@ -80,21 +80,23 @@ def generate_std_server():
 
 def plot_duration(std_duration):
     duration_bins = np.linspace(0, 1000, 100)
-    plt.hist(std_duration, duration_bins, histtype="step", label='Exponential Distribution')  # alpha: transparency
-    plt.hist(flow_duration, duration_bins, histtype="step", label='Flow Duration')
-    plt.legend(loc='upper right')
-    plt.xlabel('Flow Duration (s)')
-    plt.ylabel('Number of Flows')
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.hist(std_duration, duration_bins, histtype="step", label='Exponential Distribution')  # alpha: transparency
+    ax.hist(flow_duration, duration_bins, histtype="step", label='Flow Duration')
+    ax.legend(loc='upper right')
+    ax.set_xlabel('Flow Duration (s)')
+    ax.set_ylabel('Number of Flows')
+    fig.show()
 
 def plot_load(std_load):
     load_bins = np.linspace(0, 0.1, 200)
-    plt.hist(std_load, load_bins, histtype="step", label='Truncated-normal Distribution')  # alpha: transparency
-    plt.hist(flow_load, load_bins, histtype="step", label='Flow Load')
-    plt.legend(loc='upper right')
-    plt.xlabel('Flow Size (Mbits)')
-    plt.ylabel('Number of Flows')
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.hist(std_load, load_bins, histtype="step", label='Truncated-normal Distribution')  # alpha: transparency
+    ax.hist(flow_load, load_bins, histtype="step", label='Flow Load')
+    ax.legend(loc='upper right')
+    ax.set_xlabel('Flow Size (Mbit/s)')
+    ax.set_ylabel('Number of Flows')
+    fig.show()
 
 def calculate_duplicates(racks, src_server_num, dst_server_num):
     keys = ('1.1', '1.2', '1.3', '1.4', '1.5', '2.1', '2.2', '2.3', '2.4', '2.5', '3.1', '3.2', '3.3', '3.4', '3.5')
@@ -110,24 +112,26 @@ def plot_dst_rack(std_rack, src_server_num, dst_server_num):
     x = np.arange(len(dst_rack_bins))
     dst_rack_count = calculate_duplicates(dst_rack, src_server_num, dst_server_num)
     std_dst_rack_count = calculate_duplicates(std_rack, src_server_num, dst_server_num)
-    plt.bar(x, list(std_dst_rack_count.values()), label='Uniform Distribution', tick_label=dst_rack_bins, fill=False, edgecolor='blue')
-    plt.bar(x, list(dst_rack_count.values()), label='Dst. Rack', tick_label=dst_rack_bins, fill=False, edgecolor='orange')
+    fig, ax = plt.subplots()
+    ax.bar(x, list(std_dst_rack_count.values()), label='Uniform Distribution', tick_label=dst_rack_bins, fill=False, edgecolor='blue')
+    ax.bar(x, list(dst_rack_count.values()), label='Dst. Rack', tick_label=dst_rack_bins, fill=False, edgecolor='orange')
     # plt.xticks([1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5])
-    plt.legend(loc='upper right')
-    plt.xlabel('Dst. Rack ID')
-    plt.ylabel('Number of Chosen Destination Rack')
-    plt.show()
+    ax.legend(loc='upper right')
+    ax.set_xlabel('Dst. Rack ID')
+    ax.set_ylabel('Number of Chosen Destination Rack')
+    fig.show()
 
 def plot_dst_server(std_server):
     dst_server_bins = np.linspace(16, 32)
-    plt.hist(std_server, dst_server_bins, histtype="step", label='Uniform Distribution')
-    plt.hist(dst_server, dst_server_bins, histtype="step", label='Dst. Server')
+    fig, ax = plt.subplots()
+    ax.hist(std_server, dst_server_bins, histtype="step", label='Uniform Distribution')
+    ax.hist(dst_server, dst_server_bins, histtype="step", label='Dst. Server')
     # axes = plt.gca()
     # axes.set_ylim([0, 1000])
-    plt.legend(loc='upper right')
-    plt.xlabel('Dst. Server ID')
-    plt.ylabel('Number of Chosen Destination Server')
-    plt.show()
+    ax.legend(loc='upper right')
+    ax.set_xlabel('Dst. Server ID')
+    ax.set_ylabel('Number of Chosen Destination Server')
+    fig.show()
 
 def print_stats_result(std_duration, std_load):
     print(f"duration_mean: {np.mean(flow_duration)}")
@@ -146,9 +150,9 @@ def start_analysis(mean, std, scale=1):
     std_rack = generate_std_rack()
     std_server = generate_std_server()
     # TO BE COMMENT
-    plot_duration(std_duration)
-    plot_load(std_load)
-    print_stats_result(std_duration, std_load)
+    # plot_duration(std_duration)
+    # plot_load(std_load)
+    # print_stats_result(std_duration, std_load)
     # TO BE COMMENT
 
 if __name__ == "__main__":
